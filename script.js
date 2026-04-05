@@ -26,14 +26,14 @@ const gameBoard = (() => {
     }
 
     const checkWinner = (player) => {
-        let sameFirstRow = myGameBoard[0][0] == myGameBoard[0][1] && myGameBoard[0][1] == myGameBoard[0][2];
-        let sameSecondRow = myGameBoard[1][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[1][2];
-        let sameThirdRow = myGameBoard[2][0] == myGameBoard[2][1] && myGameBoard[2][1] == myGameBoard[2][2];
-        let sameFirstColumn = myGameBoard[0][0] == myGameBoard[1][0] && myGameBoard[1][0] == myGameBoard[2][0];
-        let sameSecondColumn = myGameBoard[0][1] == myGameBoard[1][1] && myGameBoard[2][1] == myGameBoard[1][1];
-        let sameThirdColumn = myGameBoard[0][2] == myGameBoard[1][2] && myGameBoard[1][2] == myGameBoard[2][2];
-        let leftToRightDiagonal = myGameBoard[0][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][2];
-        let rightToLeftDiagonal = myGameBoard[0][2] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][0];
+        let sameFirstRow = myGameBoard[0][0] == myGameBoard[0][1] && myGameBoard[0][1] == myGameBoard[0][2] && myGameBoard[0][2] !== null;
+        let sameSecondRow = myGameBoard[1][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[1][2] && myGameBoard[1][2] !== null;
+        let sameThirdRow = myGameBoard[2][0] == myGameBoard[2][1] && myGameBoard[2][1] == myGameBoard[2][2] && myGameBoard[2][2] !== null;
+        let sameFirstColumn = myGameBoard[0][0] == myGameBoard[1][0] && myGameBoard[1][0] == myGameBoard[2][0] && myGameBoard[2][0] !== null;
+        let sameSecondColumn = myGameBoard[0][1] == myGameBoard[1][1] && myGameBoard[2][1] == myGameBoard[1][1] && myGameBoard[1][1] !== null;
+        let sameThirdColumn = myGameBoard[0][2] == myGameBoard[1][2] && myGameBoard[1][2] == myGameBoard[2][2] && myGameBoard[2][2] !== null;
+        let leftToRightDiagonal = myGameBoard[0][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][2] && myGameBoard[2][2] !== null;
+        let rightToLeftDiagonal = myGameBoard[0][2] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][0] && myGameBoard[2][0] !== null;
            
         if (sameFirstRow || sameSecondRow || sameThirdRow ||
             sameFirstColumn || sameSecondColumn || sameThirdColumn ||
@@ -74,7 +74,7 @@ console.log(`Player Two's score +1: ${playerTwo.updateScore()}`);
 console.log(`Player One's final score (should be 2): ${playerOne.getScore()}`);
 console.log(`Player Two's final score (should be 1): ${playerTwo.getScore()}`);
 //console.log(`Player One's choice: ${gameBoard.placePlayerChoice(playerOne, 1, 1)}`);
-console.log(`Player Two's choice: ${gameBoard.placePlayerChoice(playerTwo, 1, 1)}`);
+//console.log(`Player Two's choice: ${gameBoard.placePlayerChoice(playerTwo, 1, 1)}`);
 console.log(`Player One's choice: ${gameBoard.placePlayerChoice(playerOne, 2, 1)}`);
 //console.log(`Player Two's choice: ${gameBoard.placePlayerChoice(playerTwo, 0, 2)}`);
 console.log(`Checking for winner: ${gameBoard.checkWinner(playerTwo)}`);
