@@ -3,10 +3,10 @@ const gameBoard = (() => {
     const columns = 3;
     const rows = 3;
 
-    for (i = 1; i <= rows; i++) {
+    for (i = 0; i < rows; i++) {
         const boardRow = [];
         myGameBoard.push(boardRow);
-        for (j = 1; j <= columns; j++) {
+        for (j = 0; j < columns; j++) {
             boardRow.push(null);
         }
     }
@@ -16,9 +16,18 @@ const gameBoard = (() => {
         return myGameBoard;
     }
 
+    const resetGameBoard = () => {
+        for (k = 0; k < rows; k++) {
+            for (m = 0; m < columns; m++) {
+                myGameBoard[k].splice([m], 1, null);
+            }
+        }
+        return myGameBoard;
+    }
+
     const getGameBoard = () => myGameBoard;
 
-    return { placePlayerChoice, getGameBoard };
+    return { placePlayerChoice, getGameBoard, resetGameBoard };
 })();
 
 
@@ -46,3 +55,4 @@ console.log(`Player One's score +1 again: ${playerOne.updateScore()}`);
 console.log(`Player Two's score +1: ${playerTwo.updateScore()}`);
 console.log(`Player One's final score (should be 2): ${playerOne.getScore()}`);
 console.log(`Player Two's final score (should be 1): ${playerTwo.getScore()}`);
+console.log(`Resetting game board: ${gameBoard.resetGameBoard()}`);
