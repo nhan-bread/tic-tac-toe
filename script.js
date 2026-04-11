@@ -11,7 +11,7 @@ const gameBoard = (() => {
         }
     }
 
-    const placePlayerChoice = (player, row, column) => {
+    const placePlayerChoice = (row, column) => {
         myGameBoard[row].splice(column, 1, player.marker);
         return myGameBoard;
     }
@@ -34,13 +34,15 @@ const gameBoard = (() => {
         let sameThirdColumn = myGameBoard[0][2] == myGameBoard[1][2] && myGameBoard[1][2] == myGameBoard[2][2] && myGameBoard[2][2] !== null;
         let leftToRightDiagonal = myGameBoard[0][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][2] && myGameBoard[2][2] !== null;
         let rightToLeftDiagonal = myGameBoard[0][2] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][0] && myGameBoard[2][0] !== null;
-           
+        let winner; 
+        
         if (sameFirstRow || sameSecondRow || sameThirdRow ||
             sameFirstColumn || sameSecondColumn || sameThirdColumn ||
             leftToRightDiagonal || rightToLeftDiagonal) {
             player.updateScore();
-            return `${player.marker} wins!`;
-        } else return `no winner yet`;
+            winner = true;
+        } else winner = false;
+        return winner;
     }
 
     const getGameBoard = () => myGameBoard;
@@ -62,23 +64,36 @@ function createPlayer(marker) {
 const playerOne = createPlayer("X");
 const playerTwo = createPlayer("O");
 
-console.log(`Player One's choice: ${gameBoard.placePlayerChoice(playerOne, 0, 0)}`);
-console.log(`Player Two's choice: ${gameBoard.placePlayerChoice(playerTwo, 0, 2)}`);
-console.log(`Player One's choice: ${gameBoard.placePlayerChoice(playerOne, 0, 1)}`);
-console.log(`Player Two's choice: ${gameBoard.placePlayerChoice(playerTwo, 2, 0)}`);
-console.log(`Player One's score: ${playerOne.getScore()}`);
-console.log(`Player Two's score: ${playerTwo.getScore()}`);
-console.log(`Player One's score +1: ${playerOne.updateScore()}`);
-console.log(`Player One's score +1 again: ${playerOne.updateScore()}`);
-console.log(`Player Two's score +1: ${playerTwo.updateScore()}`);
-console.log(`Player One's final score (should be 2): ${playerOne.getScore()}`);
-console.log(`Player Two's final score (should be 1): ${playerTwo.getScore()}`);
-//console.log(`Player One's choice: ${gameBoard.placePlayerChoice(playerOne, 1, 1)}`);
-//console.log(`Player Two's choice: ${gameBoard.placePlayerChoice(playerTwo, 1, 1)}`);
-console.log(`Player One's choice: ${gameBoard.placePlayerChoice(playerOne, 2, 1)}`);
-//console.log(`Player Two's choice: ${gameBoard.placePlayerChoice(playerTwo, 0, 2)}`);
-console.log(`Checking for winner: ${gameBoard.checkWinner(playerTwo)}`);
-console.log(`Player One's score: ${playerOne.getScore()}`);
-console.log(`Player Two's score: ${playerTwo.getScore()}`);
-console.log(`Getting last item: ${gameBoard.getGameBoard()[2][2]}`);
-console.log(`Resetting game board: ${gameBoard.resetGameBoard()}`);
+const gameController = (() => {
+    let currentPlayer = playerOne;
+    const getCurrentPlayer = () => currentPlayer;
+
+    const changeCurrentPlayer = () => {
+        if (currentPlayer == playerOne) {
+            currentPlayer = playerTwo;
+        } else if (currentPlayer == playerTwo) {
+            currentPlayer = playerOne;
+        }
+    }
+    
+    const playRound = (row, column) => {
+        player = getCurrentPlayer();
+        gameBoard.placePlayerChoice(row, column);
+        if (!(gameBoard.checkWinner(player))) {
+            changeCurrentPlayer();
+        } else {
+            gameBoard.resetGameBoard();
+        }
+        return gameBoard.getGameBoard();
+    }
+
+    return { playerOne, playerTwo, playRound, getCurrentPlayer };
+})();
+
+console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
+console.log(`P2 turn: ${gameController.playRound(0, 2)}`);
+console.log(`P1 turn: ${gameController.playRound(1, 1)}`);
+console.log(`P2 turn: ${gameController.playRound(1, 2)}`);
+console.log(`P1 turn: ${gameController.playRound(2, 2)}`); //should call winner here
+console.log(gameController.playerOne.getScore());
+console.log(gameController.playerTwo.getScore());
