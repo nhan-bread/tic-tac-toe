@@ -47,24 +47,24 @@ const gameBoard = (() => {
 
     const getGameBoard = () => myGameBoard;
 
-    return { placePlayerChoice, getGameBoard, resetGameBoard, checkWinner};
+    return { placePlayerChoice, getGameBoard, resetGameBoard, checkWinner };
 })();
 
 
-function createPlayer(marker) {
-    let score = 0;
-    const updateScore = () => {
-        score++;
-    }
-    const getScore = () => score;
-
-    return { marker, getScore, updateScore };
-}
-
-const playerOne = createPlayer("X");
-const playerTwo = createPlayer("O");
-
 const gameController = (() => {
+    function createPlayer(marker) {
+        let score = 0;
+        const updateScore = () => {
+            score++;
+        }
+        const getScore = () => score;
+
+        return { marker, getScore, updateScore };
+    }
+
+    const playerOne = createPlayer("X");
+    const playerTwo = createPlayer("O");
+
     let currentPlayer = playerOne;
     const getCurrentPlayer = () => currentPlayer;
 
@@ -90,10 +90,43 @@ const gameController = (() => {
     return { playerOne, playerTwo, playRound, getCurrentPlayer };
 })();
 
+const screenController = (() => {
+    const rows = 3;
+    const columns = 3;
+    const board = document.querySelector(".board");
+    const turn = document.querySelector(".turn");
+    
+    const updateScreen = () => {
+        board.textContent = "";
+
+        gameBoard.getGameBoard();
+        gameController.getCurrentPlayer();
+
+        turn.textContent = `${gameController.getCurrentPlayer().marker}'s turn!`;
+
+        for (n = 0; n < rows; n++) {
+            for (p = 0; p < columns; p++) {
+                const btn = document.createElement("button");
+                board.appendChild(btn);
+                btn.dataset.row = n;
+                btn.dataset.column = p;
+                btn.textContent = `${gameBoard.getGameBoard()[btn.dataset.row][btn.dataset.column]}`;
+            }
+        }
+    };
+
+    return { updateScreen };
+})();
+
 console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
 console.log(`P2 turn: ${gameController.playRound(0, 2)}`);
 console.log(`P1 turn: ${gameController.playRound(1, 1)}`);
 console.log(`P2 turn: ${gameController.playRound(1, 2)}`);
+console.log(`Marker at 0, 0: ${gameBoard.getGameBoard()[0][0]}`);
+console.log(typeof gameBoard.getGameBoard()[0][0]);
+console.log(`Current player: ${gameController.getCurrentPlayer()}`);
 console.log(`P1 turn: ${gameController.playRound(2, 2)}`); //should call winner here
 console.log(gameController.playerOne.getScore());
 console.log(gameController.playerTwo.getScore());
+
+screenController.updateScreen();
