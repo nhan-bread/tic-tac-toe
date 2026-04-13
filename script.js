@@ -7,7 +7,7 @@ const gameBoard = (() => {
         const boardRow = [];
         myGameBoard.push(boardRow);
         for (j = 0; j < columns; j++) {
-            boardRow.push(null);
+            boardRow.push("");
         }
     }
 
@@ -19,29 +19,32 @@ const gameBoard = (() => {
     const resetGameBoard = () => {
         for (k = 0; k < rows; k++) {
             for (m = 0; m < columns; m++) {
-                myGameBoard[k].splice([m], 1, null);
+                myGameBoard[k].splice([m], 1, "");
             }
         }
         return myGameBoard;
     }
 
     const checkWinner = (player) => {
-        let sameFirstRow = myGameBoard[0][0] == myGameBoard[0][1] && myGameBoard[0][1] == myGameBoard[0][2] && myGameBoard[0][2] !== null;
-        let sameSecondRow = myGameBoard[1][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[1][2] && myGameBoard[1][2] !== null;
-        let sameThirdRow = myGameBoard[2][0] == myGameBoard[2][1] && myGameBoard[2][1] == myGameBoard[2][2] && myGameBoard[2][2] !== null;
-        let sameFirstColumn = myGameBoard[0][0] == myGameBoard[1][0] && myGameBoard[1][0] == myGameBoard[2][0] && myGameBoard[2][0] !== null;
-        let sameSecondColumn = myGameBoard[0][1] == myGameBoard[1][1] && myGameBoard[2][1] == myGameBoard[1][1] && myGameBoard[1][1] !== null;
-        let sameThirdColumn = myGameBoard[0][2] == myGameBoard[1][2] && myGameBoard[1][2] == myGameBoard[2][2] && myGameBoard[2][2] !== null;
-        let leftToRightDiagonal = myGameBoard[0][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][2] && myGameBoard[2][2] !== null;
-        let rightToLeftDiagonal = myGameBoard[0][2] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][0] && myGameBoard[2][0] !== null;
+        let sameFirstRow = myGameBoard[0][0] == myGameBoard[0][1] && myGameBoard[0][1] == myGameBoard[0][2] && myGameBoard[0][2] !== "";
+        let sameSecondRow = myGameBoard[1][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[1][2] && myGameBoard[1][2] !== "";
+        let sameThirdRow = myGameBoard[2][0] == myGameBoard[2][1] && myGameBoard[2][1] == myGameBoard[2][2] && myGameBoard[2][2] !== "";
+        let sameFirstColumn = myGameBoard[0][0] == myGameBoard[1][0] && myGameBoard[1][0] == myGameBoard[2][0] && myGameBoard[2][0] !== "";
+        let sameSecondColumn = myGameBoard[0][1] == myGameBoard[1][1] && myGameBoard[2][1] == myGameBoard[1][1] && myGameBoard[1][1] !== "";
+        let sameThirdColumn = myGameBoard[0][2] == myGameBoard[1][2] && myGameBoard[1][2] == myGameBoard[2][2] && myGameBoard[2][2] !== "";
+        let leftToRightDiagonal = myGameBoard[0][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][2] && myGameBoard[2][2] !== "";
+        let rightToLeftDiagonal = myGameBoard[0][2] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[2][0] && myGameBoard[2][0] !== "";
+        let emptySpotPresent = getGameBoard()[0].includes("") || getGameBoard()[1].includes("") || getGameBoard()[2].includes("");
         let winner; 
         
         if (sameFirstRow || sameSecondRow || sameThirdRow ||
             sameFirstColumn || sameSecondColumn || sameThirdColumn ||
             leftToRightDiagonal || rightToLeftDiagonal) {
             player.updateScore();
-            winner = true;
-        } else winner = false;
+            winner = 'true';
+        } else if (emptySpotPresent) {
+            winner = 'false';
+        } else winner = 'tie';
         return winner;
     }
 
@@ -79,11 +82,12 @@ const gameController = (() => {
     const playRound = (row, column) => {
         player = getCurrentPlayer();
         gameBoard.placePlayerChoice(row, column);
-        if (!(gameBoard.checkWinner(player))) {
+        if ((gameBoard.checkWinner(player)) == 'false') {
+            console.log(`checking`);
             changeCurrentPlayer();
-        } else {
-            gameBoard.resetGameBoard();
-        }
+        } //else {
+          //  gameBoard.resetGameBoard();
+        //}
         return gameBoard.getGameBoard();
     }
 
@@ -102,7 +106,13 @@ const screenController = (() => {
         // gameBoard.getGameBoard();
         // gameController.getCurrentPlayer();
 
-        turn.textContent = `${gameController.getCurrentPlayer().marker}'s turn!`;
+        if (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') {
+            turn.textContent = `${gameController.getCurrentPlayer().marker} wins!`;
+        } else if (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'tie') {
+            turn.textContent = `It's a tie!`;
+        } else {
+            turn.textContent = `${gameController.getCurrentPlayer().marker}'s turn!`;
+        };
 
         for (n = 0; n < rows; n++) {
             for (p = 0; p < columns; p++) {
