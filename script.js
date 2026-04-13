@@ -99,8 +99,8 @@ const screenController = (() => {
     const updateScreen = () => {
         board.textContent = "";
 
-        gameBoard.getGameBoard();
-        gameController.getCurrentPlayer();
+        // gameBoard.getGameBoard();
+        // gameController.getCurrentPlayer();
 
         turn.textContent = `${gameController.getCurrentPlayer().marker}'s turn!`;
 
@@ -115,18 +115,28 @@ const screenController = (() => {
         }
     };
 
-    return { updateScreen };
+    const clickEvent = () => {
+        board.addEventListener("click", (e) => {
+            console.log(`clicked: ${e.target.dataset.row}, ${e.target.dataset.column}`);
+            // console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
+            gameController.playRound(e.target.dataset.row, e.target.dataset.column);
+            updateScreen();
+        })
+    };
+
+    return { updateScreen, clickEvent };
 })();
 
-console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
-console.log(`P2 turn: ${gameController.playRound(0, 2)}`);
-console.log(`P1 turn: ${gameController.playRound(1, 1)}`);
-console.log(`P2 turn: ${gameController.playRound(1, 2)}`);
-console.log(`Marker at 0, 0: ${gameBoard.getGameBoard()[0][0]}`);
-console.log(typeof gameBoard.getGameBoard()[0][0]);
-console.log(`Current player: ${gameController.getCurrentPlayer()}`);
-console.log(`P1 turn: ${gameController.playRound(2, 2)}`); //should call winner here
-console.log(gameController.playerOne.getScore());
-console.log(gameController.playerTwo.getScore());
+// console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
+// console.log(`P2 turn: ${gameController.playRound(0, 2)}`);
+// console.log(`P1 turn: ${gameController.playRound(1, 1)}`);
+// console.log(`P2 turn: ${gameController.playRound(1, 2)}`);
+// console.log(`Marker at 0, 0: ${gameBoard.getGameBoard()[0][0]}`);
+// console.log(typeof gameBoard.getGameBoard()[0][0]);
+// console.log(`Current player: ${gameController.getCurrentPlayer()}`);
+// console.log(`P1 turn: ${gameController.playRound(2, 2)}`); //should call winner here
+// console.log(gameController.playerOne.getScore());
+// console.log(gameController.playerTwo.getScore());
 
 screenController.updateScreen();
+screenController.clickEvent();
