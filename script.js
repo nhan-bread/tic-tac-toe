@@ -12,8 +12,12 @@ const gameBoard = (() => {
     }
 
     const placePlayerChoice = (row, column) => {
-        myGameBoard[row].splice(column, 1, player.marker);
-        return myGameBoard;
+        if (myGameBoard[row][column] !== "") {
+            return 'taken';
+        } else if (myGameBoard[row][column] == "") {
+            myGameBoard[row].splice(column, 1, player.marker);
+            return myGameBoard;
+        }
     }
 
     const resetGameBoard = () => {
@@ -81,13 +85,10 @@ const gameController = (() => {
     
     const playRound = (row, column) => {
         player = getCurrentPlayer();
-        gameBoard.placePlayerChoice(row, column);
-        if ((gameBoard.checkWinner(player)) == 'false') {
-            console.log(`checking`);
+        if ((gameBoard.placePlayerChoice(row, column) !== 'taken') &&
+            (gameBoard.checkWinner(player) == 'false')) {
             changeCurrentPlayer();
-        } //else {
-          //  gameBoard.resetGameBoard();
-        //}
+        }  
         return gameBoard.getGameBoard();
     }
 
