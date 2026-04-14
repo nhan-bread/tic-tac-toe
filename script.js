@@ -100,15 +100,13 @@ const screenController = (() => {
     const columns = 3;
     const board = document.querySelector(".board");
     const turn = document.querySelector(".turn");
+    const options = document.querySelector(".options");
     
     const updateScreen = () => {
         board.textContent = "";
 
-        // gameBoard.getGameBoard();
-        // gameController.getCurrentPlayer();
-
         if (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') {
-            turn.textContent = `${gameController.getCurrentPlayer().marker} wins!`;
+            turn.textContent = `${gameController.getCurrentPlayer().marker} wins!`;            
         } else if (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'tie') {
             turn.textContent = `It's a tie!`;
         } else {
@@ -124,6 +122,18 @@ const screenController = (() => {
                 btn.textContent = `${gameBoard.getGameBoard()[btn.dataset.row][btn.dataset.column]}`;
             }
         }
+
+        if ((gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') || 
+            (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'tie')) {
+                console.log(`Player one score: ${gameController.playerOne.getScore()}, Player two score: ${gameController.playerTwo.getScore()}`)
+                const newRoundBtn = document.createElement("button");
+                newRoundBtn.textContent = 'Start a new round';
+                options.appendChild(newRoundBtn);
+                newRoundBtn.addEventListener("click", () => {
+                    gameBoard.resetGameBoard();
+                    screenController.updateScreen();
+                })
+            }
     };
 
     const clickEvent = () => {
