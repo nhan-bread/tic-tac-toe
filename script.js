@@ -100,6 +100,8 @@ const screenController = (() => {
     const columns = 3;
     const board = document.querySelector(".board");
     const turn = document.querySelector(".turn");
+    const scoreDisplayOne = document.querySelector(".player-one");
+    const scoreDisplayTwo = document.querySelector(".player-two");
     const options = document.querySelector(".options");
     
     const updateScreen = () => {
@@ -134,6 +136,8 @@ const screenController = (() => {
             }
         }
 
+        scoreDisplayOne.textContent = `${gameController.playerOne.marker} score: ${gameController.playerOne.getScore()}`;
+        scoreDisplayTwo.textContent = `${gameController.playerTwo.marker} score: ${gameController.playerTwo.getScore()}`;
         // if ((gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') || 
         //     (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'tie')) {
         //         console.log(`Player one score: ${gameController.playerOne.getScore()}, Player two score: ${gameController.playerTwo.getScore()}`)
