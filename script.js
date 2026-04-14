@@ -92,7 +92,7 @@ const gameController = (() => {
         return gameBoard.getGameBoard();
     }
 
-    return { playerOne, playerTwo, playRound, getCurrentPlayer };
+    return { playerOne, playerTwo, playRound, getCurrentPlayer, changeCurrentPlayer };
 })();
 
 const screenController = (() => {
@@ -104,6 +104,17 @@ const screenController = (() => {
     
     const updateScreen = () => {
         board.textContent = "";
+        options.textContent = "";
+        const restartBtn = document.createElement("button");
+        options.appendChild(restartBtn);
+        restartBtn.textContent = 'Reset or start new game';
+        restartBtn.addEventListener("click", () => {
+            gameBoard.resetGameBoard();
+            if (gameController.getCurrentPlayer() == gameController.playerTwo) {
+                gameController.changeCurrentPlayer();
+            }
+            screenController.updateScreen();
+        })
 
         if (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') {
             turn.textContent = `${gameController.getCurrentPlayer().marker} wins!`;            
@@ -123,20 +134,20 @@ const screenController = (() => {
             }
         }
 
-        if ((gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') || 
-            (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'tie')) {
-                console.log(`Player one score: ${gameController.playerOne.getScore()}, Player two score: ${gameController.playerTwo.getScore()}`)
-                const newRoundBtn = document.createElement("button");
-                newRoundBtn.textContent = 'Start a new round';
-                options.appendChild(newRoundBtn);
-                newRoundBtn.addEventListener("click", () => {
-                    gameBoard.resetGameBoard();
-                    screenController.updateScreen();
-                })
-            }
+        // if ((gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') || 
+        //     (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'tie')) {
+        //         console.log(`Player one score: ${gameController.playerOne.getScore()}, Player two score: ${gameController.playerTwo.getScore()}`)
+        //         const newRoundBtn = document.createElement("button");
+        //         newRoundBtn.textContent = 'Start a new round';
+        //         options.appendChild(newRoundBtn);
+        //         newRoundBtn.addEventListener("click", () => {
+        //             gameBoard.resetGameBoard();
+        //             screenController.updateScreen();
+        //         })
+        //     }
     };
 
-    const clickEvent = () => {
+    const clickEventBoard = () => {
         board.addEventListener("click", (e) => {
             console.log(`clicked: ${e.target.dataset.row}, ${e.target.dataset.column}`);
             // console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
@@ -145,7 +156,7 @@ const screenController = (() => {
         })
     };
 
-    return { updateScreen, clickEvent };
+    return { updateScreen, clickEventBoard };
 })();
 
 // console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
@@ -160,4 +171,4 @@ const screenController = (() => {
 // console.log(gameController.playerTwo.getScore());
 
 screenController.updateScreen();
-screenController.clickEvent();
+screenController.clickEventBoard();
