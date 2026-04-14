@@ -1,17 +1,41 @@
+* {
+    margin: 0;
+    font-family: 'Google sans', 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
 }
 
 .turn {
-    height: 50px;
-    width: 300px;
-    outline: 2px solid blue;
+    margin-top: 2rem;
 }
 
 .board {
-    height: 300px;
-    width: 300px;
-    outline: 2px solid red;
+    --board-length: 300px;
+    height: var(--board-length);
+    width: var(--board-length);
+    outline: 2px solid black;
+}
+
+.board > * {
+    display: inline-block;
+    vertical-align: top;
+    color: black;
+    background-color: rgb(255, 215, 178);
+    border-style: solid;
+    border-color: black;
+    font-size: 1.8rem;
+    font-weight: bold;
+    width: calc( var(--board-length) / 3 );
+    height: calc( var(--board-length) / 3 );
+}
+
+.options button {
+    border-style: none;
+    border-radius: 1.2rem;
+    padding: 1rem;
 }
