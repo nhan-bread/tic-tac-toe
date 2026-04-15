@@ -12,8 +12,8 @@ const gameBoard = (() => {
     }
 
     const placePlayerChoice = (row, column) => {
-        if (myGameBoard[row][column] !== "") {
-            return 'taken';
+        if (myGameBoard[row][column] !== "" || checkWinner() == 'true') {
+            return 'invalid spot';
         } else if (myGameBoard[row][column] == "") {
             myGameBoard[row].splice(column, 1, player.marker);
             return myGameBoard;
@@ -29,7 +29,7 @@ const gameBoard = (() => {
         return myGameBoard;
     }
 
-    const checkWinner = (player) => {
+    const checkWinner = () => {
         let sameFirstRow = myGameBoard[0][0] == myGameBoard[0][1] && myGameBoard[0][1] == myGameBoard[0][2] && myGameBoard[0][2] !== "";
         let sameSecondRow = myGameBoard[1][0] == myGameBoard[1][1] && myGameBoard[1][1] == myGameBoard[1][2] && myGameBoard[1][2] !== "";
         let sameThirdRow = myGameBoard[2][0] == myGameBoard[2][1] && myGameBoard[2][1] == myGameBoard[2][2] && myGameBoard[2][2] !== "";
@@ -44,7 +44,6 @@ const gameBoard = (() => {
         if (sameFirstRow || sameSecondRow || sameThirdRow ||
             sameFirstColumn || sameSecondColumn || sameThirdColumn ||
             leftToRightDiagonal || rightToLeftDiagonal) {
-            player.updateScore();
             winner = 'true';
         } else if (emptySpotPresent) {
             winner = 'false';
@@ -85,10 +84,13 @@ const gameController = (() => {
     
     const playRound = (row, column) => {
         player = getCurrentPlayer();
-        if ((gameBoard.placePlayerChoice(row, column) !== 'taken') &&
-            (gameBoard.checkWinner(player) == 'false')) {
-            changeCurrentPlayer();
-        }  
+        if (gameBoard.placePlayerChoice(row, column) !== 'invalid spot') {
+            if (gameBoard.checkWinner() == 'false') {
+                changeCurrentPlayer();
+            } else if (gameBoard.checkWinner() == 'true') {
+                player.updateScore();
+            }
+        }
         return gameBoard.getGameBoard();
     }
 
@@ -118,9 +120,9 @@ const screenController = (() => {
             screenController.updateScreen();
         })
 
-        if (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') {
+        if (gameBoard.checkWinner() == 'true') {
             turn.textContent = `${gameController.getCurrentPlayer().marker} wins!`;            
-        } else if (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'tie') {
+        } else if (gameBoard.checkWinner() == 'tie') {
             turn.textContent = `It's a tie!`;
         } else {
             turn.textContent = `${gameController.getCurrentPlayer().marker}'s turn!`;
@@ -138,17 +140,6 @@ const screenController = (() => {
 
         scoreDisplayOne.textContent = `${gameController.playerOne.marker} score: ${gameController.playerOne.getScore()}`;
         scoreDisplayTwo.textContent = `${gameController.playerTwo.marker} score: ${gameController.playerTwo.getScore()}`;
-        // if ((gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'true') || 
-        //     (gameBoard.checkWinner(gameController.getCurrentPlayer()) == 'tie')) {
-        //         console.log(`Player one score: ${gameController.playerOne.getScore()}, Player two score: ${gameController.playerTwo.getScore()}`)
-        //         const newRoundBtn = document.createElement("button");
-        //         newRoundBtn.textContent = 'Start a new round';
-        //         options.appendChild(newRoundBtn);
-        //         newRoundBtn.addEventListener("click", () => {
-        //             gameBoard.resetGameBoard();
-        //             screenController.updateScreen();
-        //         })
-        //     }
     };
 
     const clickEventBoard = () => {
