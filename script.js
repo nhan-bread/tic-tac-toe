@@ -120,12 +120,17 @@ const screenController = (() => {
             screenController.updateScreen();
         })
 
+        if (!(gameController.playerOne.nickname || gameController.playerTwo.nickname)) {
+            gameController.playerOne.nickname = gameController.playerOne.marker;
+            gameController.playerTwo.nickname = gameController.playerTwo.marker;
+        }
+
         if (gameBoard.checkWinner() == 'true') {
-            turn.textContent = `${gameController.getCurrentPlayer().marker} wins!`;            
+            turn.textContent = `${gameController.getCurrentPlayer().nickname} wins!`;            
         } else if (gameBoard.checkWinner() == 'tie') {
             turn.textContent = `It's a tie!`;
         } else {
-            turn.textContent = `${gameController.getCurrentPlayer().marker}'s turn!`;
+            turn.textContent = `${gameController.getCurrentPlayer().nickname}'s turn!`;
         };
 
         for (n = 0; n < rows; n++) {
@@ -138,32 +143,37 @@ const screenController = (() => {
             }
         }
 
-        scoreDisplayOne.textContent = `${gameController.playerOne.marker} score: ${gameController.playerOne.getScore()}`;
-        scoreDisplayTwo.textContent = `${gameController.playerTwo.marker} score: ${gameController.playerTwo.getScore()}`;
+        scoreDisplayOne.textContent = `${gameController.playerOne.nickname} score: ${gameController.playerOne.getScore()}`;
+        scoreDisplayTwo.textContent = `${gameController.playerTwo.nickname} score: ${gameController.playerTwo.getScore()}`;
     };
 
     const clickEventBoard = () => {
         board.addEventListener("click", (e) => {
             console.log(`clicked: ${e.target.dataset.row}, ${e.target.dataset.column}`);
-            // console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
             gameController.playRound(e.target.dataset.row, e.target.dataset.column);
             updateScreen();
         })
     };
 
-    return { updateScreen, clickEventBoard };
-})();
+    const submitBtn = document.querySelector(".submit");
+    const inputNamePlayerOne = document.getElementById("namePlayerOne");
+    const inputNamePlayerTwo = document.getElementById("namePlayerTwo");
 
-// console.log(`P1 turn: ${gameController.playRound(0, 0)}`);
-// console.log(`P2 turn: ${gameController.playRound(0, 2)}`);
-// console.log(`P1 turn: ${gameController.playRound(1, 1)}`);
-// console.log(`P2 turn: ${gameController.playRound(1, 2)}`);
-// console.log(`Marker at 0, 0: ${gameBoard.getGameBoard()[0][0]}`);
-// console.log(typeof gameBoard.getGameBoard()[0][0]);
-// console.log(`Current player: ${gameController.getCurrentPlayer()}`);
-// console.log(`P1 turn: ${gameController.playRound(2, 2)}`); //should call winner here
-// console.log(gameController.playerOne.getScore());
-// console.log(gameController.playerTwo.getScore());
+    const clickEventSubmit = () => {
+        submitBtn.addEventListener("click", () => {
+            if (inputNamePlayerOne.value) {
+                gameController.playerOne.nickname = inputNamePlayerOne.value;
+            } 
+            if (inputNamePlayerTwo.value) {
+                gameController.playerTwo.nickname = inputNamePlayerTwo.value;
+            } 
+            updateScreen();
+        })
+    }
+
+    return { updateScreen, clickEventBoard, clickEventSubmit };
+})();
 
 screenController.updateScreen();
 screenController.clickEventBoard();
+screenController.clickEventSubmit();
